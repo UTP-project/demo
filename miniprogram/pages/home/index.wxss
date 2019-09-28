@@ -1,9 +1,13 @@
 /* miniprogram/pages/home/index.wxss */
 
-.map_container {
+input {
+  background: #eee;
+}
+
+.map-container {
   position: absolute;
   top: 0;
-  bottom: 80px;
+  bottom: 0;
   left: 0;
   right: 0;
 }
@@ -11,4 +15,22 @@
 .map {
   width: 100%;
   height: 100%;
+}
+
+.cover-view {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.cover-container {
+  background: #fff;
+  height: 240px;
+  border-radius: 16px 16px 0 0;
+  padding: 0 24px;
+}
+
+.input-markers {
+  margin-top: 24px;
 }

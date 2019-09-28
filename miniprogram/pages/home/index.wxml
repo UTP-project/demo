@@ -1,4 +1,10 @@
 <!-- miniprogram/pages/home/index.wxml -->
-<view class="map_container">
-  <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" />
+<view class="map-container">
+  <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}">
+    <cover-view class="cover-view">
+      <cover-view class="cover-container">
+        <input class="input-markers" placeholder="输入目的地" />
+      </cover-view>
+    </cover-view>
+  </map>
 </view>

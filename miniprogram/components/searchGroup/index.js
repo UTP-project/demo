@@ -8,10 +8,20 @@ Component({
   /**
    * Component initial data
    */
-  data: {},
+  data: {
+    markers: [{}]
+  },
 
   /**
    * Component methods
    */
-  methods: {}
+  methods: {
+    handleAdd: function() {
+      const markers = this.data.markers;
+      markers.push({});
+      this.setData({
+        markers
+      });
+    }
+  }
 });

@@ -1,11 +1,18 @@
 <!-- components/searchGroup/index.wxml -->
 <view class="container">
-  <view class="extra-wrapper"></view>
-  <view class="input-wrapper">
-    <input class="input" placeholder="输入目的地a" />
-    <input class="input" placeholder="输入目的地b" />
-  </view>
-  <view class="add-wrapper">
-    <image class="add-icon" src="../../images/add.png" />
+  <view class="item-wrapper" wx:for="{{markers}}" wx:key="{{index}}">
+    <view class="front-wrapper">
+      <view wx:if="{{index !== 0}}">
+        <image class="remove-icon" src="../../images/close.png" />
+      </view>
+    </view>
+    <view class="mid-wrapper">
+      <input placeholder="输入目的地" value="{{item.text || ''}}" />
+    </view>
+    <view class="extra-wrapper">
+      <view wx:if="{{index === markers.length - 1}}" class="add-wrapper" bind:tap="handleAdd">
+        <image class="add-icon" src="../../images/add.png" />
+      </view>
+    </view>
   </view>
 </view>

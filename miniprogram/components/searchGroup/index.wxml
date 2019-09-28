@@ -1,0 +1,11 @@
+<!-- components/searchGroup/index.wxml -->
+<view class="container">
+  <view class="extra-wrapper"></view>
+  <view class="input-wrapper">
+    <input class="input" placeholder="输入目的地a" />
+    <input class="input" placeholder="输入目的地b" />
+  </view>
+  <view class="add-wrapper">
+    <image class="add-icon" src="../../images/add.png" />
+  </view>
+</view>

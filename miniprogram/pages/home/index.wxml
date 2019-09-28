@@ -3,7 +3,9 @@
   <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}">
     <cover-view class="cover-view">
       <cover-view class="cover-container">
-        <input class="input-markers" placeholder="输入目的地" />
+        <cover-view class="markers-search">
+          <search-group />
+        </cover-view>
       </cover-view>
     </cover-view>
   </map>

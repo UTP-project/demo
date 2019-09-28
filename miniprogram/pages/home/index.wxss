@@ -1,9 +1,5 @@
 /* miniprogram/pages/home/index.wxss */
 
-input {
-  background: #eee;
-}
-
 .map-container {
   position: absolute;
   top: 0;
@@ -31,6 +27,6 @@ input {
   padding: 0 24px;
 }
 
-.input-markers {
+.markers-search {
   margin-top: 24px;
 }

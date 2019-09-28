@@ -3,12 +3,38 @@ Page({
   /**
    * Page initial data
    */
-  data: {},
+  data: {
+    markers: [],
+    latitude: '',
+    longitude: ''
+  },
 
   /**
    * Lifecycle function--Called when page load
    */
-  onLoad: function(options) {},
+  onLoad: function(options) {
+    const that = this;
+    wx.getLocation({
+      success(res) {
+        const { latitude, longitude } = res;
+        const markers = [
+          ...that.data.markers,
+          {
+            iconPath: '../../images/map/position-fill.png',
+            width: 32,
+            height: 32,
+            latitude,
+            longitude
+          }
+        ];
+        that.setData({
+          latitude,
+          longitude,
+          markers
+        });
+      }
+    });
+  },
 
   /**
    * Lifecycle function--Called when page is initially rendered

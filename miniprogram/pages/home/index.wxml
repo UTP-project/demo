@@ -1,2 +1,4 @@
 <!-- miniprogram/pages/home/index.wxml -->
-<text>hello, world</text>
+<view class="map_container">
+  <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" />
+</view>

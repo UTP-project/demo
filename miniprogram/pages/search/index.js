@@ -3,7 +3,19 @@ Page({
   /**
    * Page initial data
    */
-  data: {},
+  data: {
+    markers: [
+      {
+        placeholder: '起始位置',
+        text: ''
+      }
+    ]
+  },
+
+  setMarkers: function(e) {
+    const { markers } = e.detail;
+    this.setData({ markers });
+  },
 
   /**
    * Lifecycle function--Called when page load

@@ -3,32 +3,25 @@ Component({
   /**
    * Component properties
    */
-  properties: {},
+  properties: {
+    markers: Array
+  },
 
   /**
    * Component initial data
    */
-  data: {
-    markers: [
-      {
-        placeholder: '起始位置',
-        text: ''
-      }
-    ]
-  },
+  data: {},
 
   /**
    * Component methods
    */
   methods: {
-    handleAdd: function() {
+    onAdd: function() {
       const { markers } = this.data;
       markers.push({ text: '' });
-      this.setData({
-        markers
-      });
+      this.triggerEvent('setMarkers', { markers });
     },
-    handleTap: function(e) {
+    onTap: function(e) {
       const { target } = e;
       const {
         dataset: { type, idx }
@@ -36,10 +29,10 @@ Component({
       const { markers } = this.data;
       if (type === 'delete') {
         markers.splice(idx, 1);
-        this.setData({ markers });
+        this.triggerEvent('setMarkers', { markers });
       }
     },
-    handleInputBlur: function(e) {
+    onInput: function(e) {
       const {
         target,
         detail: { value }
@@ -50,7 +43,7 @@ Component({
       const { markers } = this.data;
       if (type === 'input') {
         markers[idx].text = value;
-        this.setData({ markers });
+        this.triggerEvent('setMarkers', { markers });
       }
     }
   }

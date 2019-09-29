@@ -28,21 +28,21 @@
   align-items: flex-end;
 }
 
-.item-wrapper:not(:last-child) .mid-wrapper {
+.item-wrapper:not(:last-child) {
   position: relative;
   margin-bottom: 16px;
   overflow: visible;
 }
 
-.item-wrapper:not(:last-child) .mid-wrapper::after {
+.item-wrapper:not(:last-child)::after {
   content: '';
   height: 1px;
   background: #ccc;
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 12px;
-  transform: translateY(8px)
+  left: 12%;
+  right: 12%;
+  transform: translate(-8px, 8px);
 }
 
 .remove-icon {

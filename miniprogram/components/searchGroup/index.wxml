@@ -1,13 +1,13 @@
 <!-- components/searchGroup/index.wxml -->
 <view class="container">
-  <view class="item-wrapper" wx:for="{{markers}}" wx:key="{{index}}">
+  <view class="item-wrapper" wx:for="{{markers}}" wx:key="{{index}}" bind:tap="handleTap">
     <view class="front-wrapper">
       <view wx:if="{{index !== 0}}">
-        <image class="remove-icon" src="../../images/close.png" />
+        <image data-type="delete" data-idx="{{index}}" class="remove-icon" src="../../images/close.png" />
       </view>
     </view>
     <view class="mid-wrapper">
-      <input placeholder="输入目的地" value="{{item.text || ''}}" />
+      <input data-type="input" data-idx="{{index}}" placeholder="{{item.placeholder || '请输入目的地'}}" value="{{item.text || ''}}" bindblur="handleInputBlur" />
     </view>
     <view class="extra-wrapper">
       <view wx:if="{{index === markers.length - 1}}" class="add-wrapper" bind:tap="handleAdd">

@@ -1,9 +1,18 @@
 /* miniprogram/pages/search/index.wxss */
 
-.container {
+.markers-card {
   padding: 16px;
+  height: 160px;
+  overflow-y: scroll;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, .2);
 }
 
-.markers-search {
-  margin: 24px 0;
+.markers-container {
+  margin: 8px 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
 }

@@ -3,9 +3,9 @@
   <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}">
     <cover-view class="cover-view">
       <cover-view class="cover-container">
-        <cover-view class="markers-search">
-          <search-group />
-        </cover-view>
+        <button class="btn" loading="{{loading}}" disabled="{{disabled}}" bindtap="toSearch">
+          开始制定路线
+        </button>
       </cover-view>
     </cover-view>
   </map>

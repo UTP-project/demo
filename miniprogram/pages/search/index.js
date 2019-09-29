@@ -1,44 +1,14 @@
-// miniprogram/pages/home/index.js
+// miniprogram/pages/search/index.js
 Page({
   /**
    * Page initial data
    */
-  data: {
-    markers: [],
-    latitude: '',
-    longitude: ''
-  },
-
-  toSearch: function() {
-    wx.navigateTo({ url: '/pages/search/index' });
-  },
+  data: {},
 
   /**
    * Lifecycle function--Called when page load
    */
-  onLoad: function(options) {
-    const that = this;
-    wx.getLocation({
-      success(res) {
-        const { latitude, longitude } = res;
-        const markers = [
-          ...that.data.markers,
-          {
-            iconPath: '../../images/map/position-fill.png',
-            width: 32,
-            height: 32,
-            latitude,
-            longitude
-          }
-        ];
-        that.setData({
-          latitude,
-          longitude,
-          markers
-        });
-      }
-    });
-  },
+  onLoad: function(options) {},
 
   /**
    * Lifecycle function--Called when page is initially rendered

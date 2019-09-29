@@ -22,18 +22,14 @@
 
 .cover-container {
   background: #fff;
-  height: 240px;
+  height: 180px;
   border-radius: 16px 16px 0 0;
   padding: 0 24px;
   overflow-y: scroll;
 }
 
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  color: transparent;
-}
-
-.markers-search {
-  margin: 24px 0;
+.btn {
+  margin: 36px 24px;
+  color: #fff;
+  background-color: #00B2B2;
 }

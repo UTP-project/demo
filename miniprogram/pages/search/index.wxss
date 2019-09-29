@@ -1,0 +1,9 @@
+/* miniprogram/pages/search/index.wxss */
+
+.container {
+  padding: 16px;
+}
+
+.markers-search {
+  margin: 24px 0;
+}

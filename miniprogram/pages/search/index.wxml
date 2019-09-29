@@ -1,0 +1,6 @@
+<!-- miniprogram/pages/search/index.wxml -->
+<view class="container">
+  <view class="markers-search">
+    <search-group />
+  </view>
+</view>

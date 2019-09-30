@@ -1,4 +1,5 @@
 // miniprogram/pages/home/index.js
+const { defaultLongitude, defaultLatitude } = require('../../config/map');
 Page({
   /**
    * Page initial data
@@ -20,9 +21,8 @@ Page({
     const that = this;
     wx.getLocation({
       success(res) {
-        const { latitude, longitude } = res;
+        const { longitude, latitude } = res;
         const markers = [
-          ...that.data.markers,
           {
             iconPath: '../../images/map/position-fill.png',
             width: 32,
@@ -31,11 +31,22 @@ Page({
             longitude
           }
         ];
-        that.setData({
-          latitude,
-          longitude,
-          markers
-        });
+        that.setData({ longitude, latitude, markers });
+      },
+      fail(e) {
+        // 获取位置失败, 采用默认位置
+        const longitude = defaultLongitude;
+        const latitude = defaultLatitude;
+        const markers = [
+          {
+            iconPath: '../../images/map/position-fill.png',
+            width: 32,
+            height: 32,
+            latitude,
+            longitude
+          }
+        ];
+        that.setData({ longitude, latitude, markers });
       }
     });
   },

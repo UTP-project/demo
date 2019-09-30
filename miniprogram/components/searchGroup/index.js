@@ -21,9 +21,13 @@ Component({
     },
     onTap: function(e) {
       const { idx, type } = e.target.dataset;
-      if (type === 'delete') {
+      if (type === 'delete' && idx > 1) {
         this.triggerEvent('delete', { idx });
       }
+    },
+    onFocus: function(e) {
+      const { idx } = e.target.dataset;
+      this.triggerEvent('focus', { idx });
     },
     onInput: function(e) {
       const { idx } = e.target.dataset;

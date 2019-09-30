@@ -12,6 +12,9 @@ Page({
       {
         placeholder: '起始位置',
         text: ''
+      },
+      {
+        text: ''
       }
     ],
     tips: []
@@ -19,20 +22,34 @@ Page({
 
   bindAdd: function(e) {
     const { markers } = this.data;
+    const nextIdx = markers.length;
     markers.push({ text: '' });
-    this.setData({ markers });
+    this.setData({ markers, curMarkerIdx: nextIdx });
   },
   bindDelete: function(e) {
     const { idx } = e.detail;
-    const { markers } = this.data;
+    const { markers, curMarkerIdx } = this.data;
     markers.splice(idx, 1);
-    this.setData({ markers });
+    const data = { markers };
+    if (idx === curMarkerIdx) {
+      data.curMarkerIdx = 0;
+    }
+    this.setData(data, () => {
+      this.findNextIdx();
+    });
+  },
+  bindFocus: function(e) {
+    const { idx } = e.detail;
+    const { markers, curMarkerIdx } = this.data;
+    if (idx !== curMarkerIdx) {
+      this.setData({ markers, curMarkerIdx: idx });
+    }
   },
   bindInput: function(e) {
     const { idx, value } = e.detail;
     const { markers } = this.data;
     markers[idx].text = value;
-    this.setData({ markers, curMarkerIdx: idx }, () => {
+    this.setData({ markers }, () => {
       this.fetchTips(idx);
     });
   },
@@ -56,12 +73,24 @@ Page({
         const location = item.location.split(',');
         markers[idx] = {
           ...markers[idx],
-          longitude: location[0],
-          latitude: location[1]
+          longitude: parseFloat(location[0]),
+          latitude: parseFloat(location[1])
         };
-        this.setData({ markers, tips: [] });
+        this.setData({ markers, tips: [] }, () => {
+          if (this.findNextIdx() === -1) {
+            // TODO: get route
+          }
+        });
       }
     }
+  },
+  findNextIdx() {
+    const { markers, curMarkerIdx: idx } = this.data;
+    const nextIdx = markers.findIndex(el => el.text === '');
+    const nIdx = nextIdx === -1 ? idx : nextIdx;
+    // change focus input
+    this.setData({ markers, curMarkerIdx: nIdx });
+    return nextIdx;
   },
   fetchTips(idx) {
     if (idx !== undefined) {

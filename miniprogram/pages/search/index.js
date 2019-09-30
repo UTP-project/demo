@@ -1,6 +1,7 @@
 // miniprogram/pages/search/index.js
 const { amapKey } = require('../../config/map');
 const amapFile = require('../../libs/amap-wx');
+const amap = new amapFile.AMapWX({ key: amapKey });
 Page({
   /**
    * Page initial data
@@ -28,39 +29,56 @@ Page({
     this.setData({ markers });
   },
   bindInput: function(e) {
-    const that = this;
     const { idx, value } = e.detail;
-    const { markers } = that.data;
+    const { markers } = this.data;
     markers[idx].text = value;
-    that.setData({ markers, curMarkerIdx: idx });
-    const amap = new amapFile.AMapWX({ key: amapKey });
-    amap.getInputtips({
-      keywords: value,
-      location: '',
-      success: function(data) {
-        if (data && data.tips) {
-          console.log(data.tips);
-          that.setData({
-            tips: data.tips
-          });
-        }
-      }
+    this.setData({ markers, curMarkerIdx: idx }, () => {
+      this.fetchTips(idx);
     });
   },
   bindSearch: function(e) {
     const { item } = e.target.dataset;
     if (item) {
-      const location = item.location.split(',');
       const { markers } = this.data;
       const idx = this.data.curMarkerIdx;
       markers[idx] = {
         ...markers[idx],
-        text: item.name,
-        longitude: location[0],
-        latitude: location[1]
+        text: item.name
       };
-      console.log(markers);
-      this.setData({ markers, tips: [] });
+      if (Array.isArray(item.location)) {
+        if (item.location.length === 0) {
+          markers[idx] = { ...markers[idx] };
+          this.setData({ markers }, () => {
+            this.fetchTips(idx);
+          });
+        }
+      } else {
+        const location = item.location.split(',');
+        markers[idx] = {
+          ...markers[idx],
+          longitude: location[0],
+          latitude: location[1]
+        };
+        this.setData({ markers, tips: [] });
+      }
+    }
+  },
+  fetchTips(idx) {
+    if (idx !== undefined) {
+      const { markers } = this.data;
+      const that = this;
+      amap.getInputtips({
+        keywords: markers[idx].text,
+        location: '',
+        success: function(data) {
+          if (data && data.tips) {
+            console.log(data.tips);
+            that.setData({
+              tips: data.tips
+            });
+          }
+        }
+      });
     }
   },
 

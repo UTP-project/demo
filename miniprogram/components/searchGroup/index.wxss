@@ -1,9 +1,9 @@
 /* components/searchGroup/index.wxss */
 
 .container {
-  background: #eee;
+  background: #f6f6f6;
   border-radius: 6px;
-  padding: 12px;
+  padding: 8px;
 }
 
 .item-wrapper {

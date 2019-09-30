@@ -1,18 +1,70 @@
 /* miniprogram/pages/search/index.wxss */
 
-.markers-card {
-  padding: 16px;
-  height: 160px;
-  overflow-y: scroll;
-  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, .2);
-}
-
-.markers-container {
-  margin: 8px 0;
-}
-
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
   color: transparent;
+}
+
+.container {
+  height: 100vh;
+}
+
+.markers-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 24px;
+  max-height: 120px;
+  overflow-y: scroll;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, .2);
+}
+
+.tips-card {
+  position: absolute;
+  top: 144px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+}
+
+.tips-container {
+  position: relative;
+  /* top: 192px; */
+}
+
+.tips-item {
+  padding: 18px 32px;
+}
+
+.tips-item:not(:last-child) {
+  position: relative;
+}
+
+.tips-item:not(:last-child)::after {
+  content: '';
+  height: 1px;
+  background: #ccc;
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 0;
+}
+
+.tips-name {
+  pointer-events: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tips-address {
+  pointer-events: none;
+  font-size: 14px;
+  color: #666;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }

@@ -1,16 +1,12 @@
 <!-- miniprogram/pages/search/index.wxml -->
 <view class="container">
   <view class="markers-card">
-    <view class="markers-container">
-      <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:input="bindInput" />
-    </view>
+    <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:input="bindInput" />
   </view>
-  <view class="tips-card">
-    <view class="tips-container" bind:tap="bindSearch">
-      <view class="tips-item" wx:for="{{tips}}" wx:key="{{index}}" data-item="{{item}}">
-        <view class="tips-name">{{item.name}}</view>
-        <view class="tips-address">{{item.district}}{{item.address}}</view>
-      </view>
+  <view class="tips-card" bind:tap="bindSearch">
+    <view class="tips-item" wx:for="{{tips}}" wx:key="{{index}}" data-item="{{item}}">
+      <view class="tips-name">{{item.name}}</view>
+      <view class="tips-address">{{item.district}}{{item.address}}</view>
     </view>
   </view>
 </view>

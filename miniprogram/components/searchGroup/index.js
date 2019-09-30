@@ -17,34 +17,18 @@ Component({
    */
   methods: {
     onAdd: function() {
-      const { markers } = this.data;
-      markers.push({ text: '' });
-      this.triggerEvent('setMarkers', { markers });
+      this.triggerEvent('add');
     },
     onTap: function(e) {
-      const { target } = e;
-      const {
-        dataset: { type, idx }
-      } = target;
-      const { markers } = this.data;
+      const { idx, type } = e.target.dataset;
       if (type === 'delete') {
-        markers.splice(idx, 1);
-        this.triggerEvent('setMarkers', { markers });
+        this.triggerEvent('delete', { idx });
       }
     },
     onInput: function(e) {
-      const {
-        target,
-        detail: { value }
-      } = e;
-      const {
-        dataset: { type, idx }
-      } = target;
-      const { markers } = this.data;
-      if (type === 'input') {
-        markers[idx].text = value;
-        this.triggerEvent('setMarkers', { markers });
-      }
+      const { idx } = e.target.dataset;
+      const { value } = e.detail;
+      this.triggerEvent('input', { idx, value });
     }
   }
 });

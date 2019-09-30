@@ -2,7 +2,7 @@
 <view class="container">
   <view class="markers-card">
     <view class="markers-container">
-      <search-group markers="{{markers}}" bind:setMarkers="setMarkers" />
+      <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:input="bindInput" />
     </view>
   </view>
 </view>

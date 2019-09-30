@@ -12,9 +12,34 @@ Page({
     ]
   },
 
-  setMarkers: function(e) {
-    const { markers } = e.detail;
+  bindAdd: function(e) {
+    const { markers } = this.data;
+    markers.push({ text: '' });
     this.setData({ markers });
+  },
+  bindDelete: function(e) {
+    const { idx } = e.detail;
+    const { markers } = this.data;
+    markers.splice(idx, 1);
+    this.setData({ markers });
+  },
+  bindInput: function(e) {
+    const { idx, value } = e.detail;
+    const { markers } = this.data;
+    markers[idx].text = value;
+    this.setData({ markers });
+    // const myAmapFun = new amapFile.AMapWX({ key: '高德Key' });
+    // myAmapFun.getInputtips({
+    //   keywords: value,
+    //   location: '',
+    //   success: function(data) {
+    //     if (data && data.tips) {
+    //       that.setData({
+    //         tips: data.tips
+    //       });
+    //     }
+    //   }
+    // });
   },
 
   /**

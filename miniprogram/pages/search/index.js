@@ -1,15 +1,19 @@
 // miniprogram/pages/search/index.js
+const { amapKey } = require('../../config/map');
+const amapFile = require('../../libs/amap-wx');
 Page({
   /**
    * Page initial data
    */
   data: {
+    curMarkerIdx: 0,
     markers: [
       {
         placeholder: '起始位置',
         text: ''
       }
-    ]
+    ],
+    tips: []
   },
 
   bindAdd: function(e) {
@@ -24,22 +28,40 @@ Page({
     this.setData({ markers });
   },
   bindInput: function(e) {
+    const that = this;
     const { idx, value } = e.detail;
-    const { markers } = this.data;
+    const { markers } = that.data;
     markers[idx].text = value;
-    this.setData({ markers });
-    // const myAmapFun = new amapFile.AMapWX({ key: '高德Key' });
-    // myAmapFun.getInputtips({
-    //   keywords: value,
-    //   location: '',
-    //   success: function(data) {
-    //     if (data && data.tips) {
-    //       that.setData({
-    //         tips: data.tips
-    //       });
-    //     }
-    //   }
-    // });
+    that.setData({ markers, curMarkerIdx: idx });
+    const amap = new amapFile.AMapWX({ key: amapKey });
+    amap.getInputtips({
+      keywords: value,
+      location: '',
+      success: function(data) {
+        if (data && data.tips) {
+          console.log(data.tips);
+          that.setData({
+            tips: data.tips
+          });
+        }
+      }
+    });
+  },
+  bindSearch: function(e) {
+    const { item } = e.target.dataset;
+    if (item) {
+      const location = item.location.split(',');
+      const { markers } = this.data;
+      const idx = this.data.curMarkerIdx;
+      markers[idx] = {
+        ...markers[idx],
+        text: item.name,
+        longitude: location[0],
+        latitude: location[1]
+      };
+      console.log(markers);
+      this.setData({ markers, tips: [] });
+    }
   },
 
   /**

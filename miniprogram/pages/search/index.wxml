@@ -5,4 +5,9 @@
       <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:input="bindInput" />
     </view>
   </view>
+  <view class="tips-container" bind:tap="bindSearch">
+    <view class="tips-item" wx:for="{{tips}}" wx:key="{{index}}" data-item="{{item}}">
+      {{item.name}}
+    </view>
+  </view>
 </view>

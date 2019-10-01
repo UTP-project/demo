@@ -1,7 +1,9 @@
 <!-- miniprogram/pages/search/index.wxml -->
 <view class="container">
   <view class="markers-card">
-    <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:focus="bindFocus" bind:input="bindInput" />
+    <view class="search-wrapper">
+      <input class="search-input" placeholder="搜索" focus="{{true}}" />
+    </view>
   </view>
   <view class="tips-card" bind:tap="bindSearch">
     <view class="tips-item" wx:for="{{tips}}" wx:key="{{index}}" data-item="{{item}}">

@@ -1,6 +1,4 @@
 {
-  "usingComponents": {
-    "search-group": "../../components/searchGroup"
-  },
+  "usingComponents": {},
   "disableScroll": true
 }

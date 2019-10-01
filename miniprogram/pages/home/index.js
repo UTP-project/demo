@@ -7,7 +7,6 @@ Page({
   data: {
     editMode: false,
     routes: null,
-    curMarkerIdx: 0,
     markers: [
       {
         placeholder: '起始位置',
@@ -48,37 +47,19 @@ Page({
   },
   bindAdd: function(e) {
     const { markers } = this.data;
-    const nextIdx = markers.length;
     markers.push({ text: '', disabled: true });
-    this.setData({ markers, curMarkerIdx: nextIdx });
+    this.setData({ markers });
   },
   bindDelete: function(e) {
     const { idx } = e.detail;
-    const { markers, curMarkerIdx } = this.data;
+    const { markers } = this.data;
     markers.splice(idx, 1);
     const data = { markers };
-    if (idx === curMarkerIdx) {
-      data.curMarkerIdx = 0;
-    }
-    this.setData(data, () => {
-      this.findNextIdx();
-    });
+    this.setData(data);
   },
   bindInputTap: function(e) {
     const { idx } = e.detail;
-    const { markers, curMarkerIdx } = this.data;
-    if (idx !== curMarkerIdx) {
-      this.setData({ markers, curMarkerIdx: idx });
-    }
     this.toSearch(idx);
-  },
-  findNextIdx() {
-    const { markers, curMarkerIdx: idx } = this.data;
-    const nextIdx = markers.findIndex(el => el.text === '');
-    const nIdx = nextIdx === -1 ? idx : nextIdx;
-    // change focus input
-    this.setData({ markers, curMarkerIdx: nIdx });
-    return nextIdx;
   },
 
   /**

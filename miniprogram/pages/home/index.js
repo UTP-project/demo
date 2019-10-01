@@ -27,12 +27,14 @@ Page({
     this.setData({ editMode: true });
   },
   toSearch: function(idx) {
+    const that = this;
     const { markers, latitude, longitude } = this.data;
     wx.navigateTo({
       url: '/pages/search/index',
       events: {
-        inputBlur: function(data) {
-          console.log('inputBlur', data);
+        confirm: function(data) {
+          markers[idx] = { ...markers[idx], ...data };
+          that.setData({ markers });
         }
       },
       success: function(res) {

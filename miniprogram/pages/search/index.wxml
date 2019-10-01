@@ -2,7 +2,7 @@
 <view class="container">
   <view class="markers-card">
     <view class="search-wrapper">
-      <input class="search-input" placeholder="搜索" focus="{{true}}" />
+      <input class="search-input" placeholder="搜索" value="{{keywords}}" focus="{{true}}" bindinput="bindInput" />
     </view>
   </view>
   <view class="tips-card" bind:tap="bindSearch">

@@ -7,64 +7,56 @@ Page({
    * Page initial data
    */
   data: {
-    curMarkerIdx: 0,
-    markers: [
-      {
-        placeholder: '起始位置',
-        text: ''
-      },
-      {
-        text: ''
-      }
-    ],
+    keywords: '',
+    latitude: '',
+    longitude: '',
     tips: []
   },
 
   bindInput: function(e) {
-    const { idx, value } = e.detail;
-    const { markers } = this.data;
-    markers[idx].text = value;
-    this.setData({ markers }, () => {
-      this.fetchTips(idx);
+    const { value } = e.detail;
+    this.setData({ keywords: value }, () => {
+      this.fetchTips();
     });
   },
   bindSearch: function(e) {
     const { item } = e.target.dataset;
     if (item) {
-      const { markers } = this.data;
-      const idx = this.data.curMarkerIdx;
-      markers[idx] = {
-        ...markers[idx],
-        text: item.name
-      };
       if (Array.isArray(item.location)) {
         if (item.location.length === 0) {
-          markers[idx] = { ...markers[idx] };
-          this.setData({ markers }, () => {
-            this.fetchTips(idx);
+          this.setData({ keywords: item.name }, () => {
+            this.fetchTips();
           });
         }
       } else {
         const location = item.location.split(',');
-        markers[idx] = {
-          ...markers[idx],
-          longitude: parseFloat(location[0]),
-          latitude: parseFloat(location[1])
-        };
-        this.setData({ markers, tips: [] }, () => {
-          if (this.findNextIdx() === -1) {
-            // TODO: get route
+        this.setData(
+          {
+            tips: [],
+            keywords: item.name,
+            longitude: parseFloat(location[0]),
+            latitude: parseFloat(location[1])
+          },
+          () => {
+            const eventChannel = this.getOpenerEventChannel();
+            const { longitude, latitude, keywords } = this.data;
+            eventChannel.emit('confirm', {
+              text: keywords,
+              longitude,
+              latitude
+            });
+            wx.navigateBack();
           }
-        });
+        );
       }
     }
   },
-  fetchTips(idx) {
-    if (idx !== undefined) {
-      const { markers } = this.data;
+  fetchTips() {
+    const { keywords } = this.data;
+    if (keywords) {
       const that = this;
       amap.getInputtips({
-        keywords: markers[idx].text,
+        keywords,
         location: '',
         success: function(data) {
           if (data && data.tips) {
@@ -84,8 +76,7 @@ Page({
   onLoad: function(options) {
     const eventChannel = this.getOpenerEventChannel();
     eventChannel.on('onload', data => {
-      console.log('onload', data);
-      eventChannel.emit('inputBlur', { name: 'test' });
+      this.setData({ ...data }, () => this.fetchTips());
     });
   },
 

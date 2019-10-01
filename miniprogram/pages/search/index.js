@@ -52,12 +52,12 @@ Page({
     }
   },
   fetchTips() {
-    const { keywords } = this.data;
+    const { keywords, longitude, latitude } = this.data;
     if (keywords) {
       const that = this;
       amap.getInputtips({
         keywords,
-        location: '',
+        location: `${longitude},${latitude}`,
         success: function(data) {
           if (data && data.tips) {
             console.log(data.tips);

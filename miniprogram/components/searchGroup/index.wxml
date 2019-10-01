@@ -7,7 +7,7 @@
       </view>
     </view>
     <view class="mid-wrapper">
-      <input data-idx="{{index}}" placeholder="{{item.placeholder || '请输入旅行地点'}}" value="{{item.text || ''}}" bindfocus="onFocus" bindinput="onInput" />
+      <input data-type="input" data-idx="{{index}}" placeholder="{{item.placeholder || '请输入旅行地点'}}" value="{{item.text}}" disabled="{{item.disabled}}" bindfocus="onFocus" bindinput="onInput" />
     </view>
     <view class="extra-wrapper">
       <view wx:if="{{index === markers.length - 1}}" class="add-wrapper" bind:tap="onAdd">

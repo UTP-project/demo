@@ -1,12 +1,12 @@
 <!-- miniprogram/pages/home/index.wxml -->
 <view class="map-container">
-  <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}">
-    <cover-view class="cover-view">
-      <cover-view class="cover-container">
-        <button class="btn" loading="{{loading}}" disabled="{{disabled}}" bindtap="toSearch">
-          开始制定路线
-        </button>
-      </cover-view>
-    </cover-view>
-  </map>
+  <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" />
+  <view class="cover-view">
+    <view class="cover-container" style="height: {{editMode ? 'calc(100vh - 60px)' : '180px'}}">
+      <button wx:if="{{!editMode && !routes}}" class="btn" bindtap="toEdit">开始制定路线</button>
+      <view wx:if="{{editMode}}" class="search-group">
+        <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
+      </view>
+    </view>
+  </view>
 </view>

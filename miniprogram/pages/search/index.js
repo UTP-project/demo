@@ -20,31 +20,6 @@ Page({
     tips: []
   },
 
-  bindAdd: function(e) {
-    const { markers } = this.data;
-    const nextIdx = markers.length;
-    markers.push({ text: '' });
-    this.setData({ markers, curMarkerIdx: nextIdx });
-  },
-  bindDelete: function(e) {
-    const { idx } = e.detail;
-    const { markers, curMarkerIdx } = this.data;
-    markers.splice(idx, 1);
-    const data = { markers };
-    if (idx === curMarkerIdx) {
-      data.curMarkerIdx = 0;
-    }
-    this.setData(data, () => {
-      this.findNextIdx();
-    });
-  },
-  bindFocus: function(e) {
-    const { idx } = e.detail;
-    const { markers, curMarkerIdx } = this.data;
-    if (idx !== curMarkerIdx) {
-      this.setData({ markers, curMarkerIdx: idx });
-    }
-  },
   bindInput: function(e) {
     const { idx, value } = e.detail;
     const { markers } = this.data;
@@ -84,14 +59,6 @@ Page({
       }
     }
   },
-  findNextIdx() {
-    const { markers, curMarkerIdx: idx } = this.data;
-    const nextIdx = markers.findIndex(el => el.text === '');
-    const nIdx = nextIdx === -1 ? idx : nextIdx;
-    // change focus input
-    this.setData({ markers, curMarkerIdx: nIdx });
-    return nextIdx;
-  },
   fetchTips(idx) {
     if (idx !== undefined) {
       const { markers } = this.data;
@@ -114,7 +81,13 @@ Page({
   /**
    * Lifecycle function--Called when page load
    */
-  onLoad: function(options) {},
+  onLoad: function(options) {
+    const eventChannel = this.getOpenerEventChannel();
+    eventChannel.on('onload', data => {
+      console.log('onload', data);
+      eventChannel.emit('inputBlur', { name: 'test' });
+    });
+  },
 
   /**
    * Lifecycle function--Called when page is initially rendered

@@ -22,7 +22,6 @@
 
 .cover-container {
   background: #fff;
-  height: 180px;
   border-radius: 16px 16px 0 0;
   padding: 0 24px;
   overflow-y: scroll;
@@ -32,4 +31,8 @@
   margin: 36px 24px;
   color: #fff;
   background-color: #00B2B2;
+}
+
+.search-group {
+  padding: 24px 0;
 }

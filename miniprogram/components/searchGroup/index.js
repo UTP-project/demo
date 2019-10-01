@@ -16,16 +16,14 @@ Component({
    * Component methods
    */
   methods: {
-    onAdd: function() {
-      this.triggerEvent('add');
-    },
     onTap: function(e) {
       const { idx, type } = e.target.dataset;
       if (type === 'delete' && idx > 1) {
         this.triggerEvent('delete', { idx });
-      }
-      if (type === 'input') {
+      } else if (type === 'input') {
         this.triggerEvent('tapInput', { idx });
+      } else if (type === 'add') {
+        this.triggerEvent('add');
       }
     },
     onFocus: function(e) {

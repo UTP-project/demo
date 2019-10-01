@@ -2,10 +2,17 @@
 <view class="map-container">
   <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" />
   <view class="cover-view">
-    <view class="cover-container" style="height: {{editMode ? 'calc(100vh - 60px)' : '180px'}}">
-      <button wx:if="{{!editMode && !routes}}" class="btn" bindtap="toEdit">开始制定路线</button>
-      <view wx:if="{{editMode}}" class="search-group">
-        <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
+    <view class="cover-container" style="height: {{expand ? 'calc(100vh - 60px)' : '180px'}}">
+      <view wx:if="{{expand}}" class="collapse-wrapper" bind:tap="collapse">
+        <text>collapse</text>
+      </view>
+      <view class="content-wrapper">
+        <view wx:if="{{expand && editMode}}" class="search-group">
+          <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
+        </view>
+        <view class="btn-wrapper">
+          <button class="btn" bindtap="expand">开始制定路线</button>
+        </view>
       </view>
     </view>
   </view>

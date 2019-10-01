@@ -5,6 +5,7 @@ Page({
    * Page initial data
    */
   data: {
+    expand: false,
     editMode: false,
     routes: null,
     markers: [
@@ -22,8 +23,11 @@ Page({
     longitude: ''
   },
 
-  toEdit: function() {
-    this.setData({ editMode: true });
+  collapse: function() {
+    this.setData({ expand: false });
+  },
+  expand: function() {
+    this.setData({ expand: true, editMode: true });
   },
   toSearch: function(idx) {
     const that = this;

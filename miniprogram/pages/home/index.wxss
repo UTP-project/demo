@@ -23,16 +23,35 @@
 .cover-container {
   background: #fff;
   border-radius: 16px 16px 0 0;
-  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.collapse-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+  height: 36px
+}
+
+.collapse-icon {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.content-wrapper {
+  padding: 12px 24px;
   overflow-y: scroll;
 }
 
-.btn {
+.btn-wrapper {
   margin: 36px 24px;
-  color: #fff;
-  background-color: #00B2B2;
 }
 
-.search-group {
-  padding: 24px 0;
+.btn {
+  color: #fff;
+  background-color: #00B2B2;
 }

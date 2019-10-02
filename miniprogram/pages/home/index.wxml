@@ -1,6 +1,6 @@
 <!-- miniprogram/pages/home/index.wxml -->
 <view class="map-container">
-  <map class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" />
+  <map id="home-map" class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline}}" />
   <view class="cover-view">
     <view class="cover-container" style="height: {{expand ? 'calc(100vh - 60px)' : '180px'}}">
       <view wx:if="{{expand}}" class="collapse-wrapper" bind:tap="collapse">
@@ -10,11 +10,13 @@
         <view wx:if="{{expand && editMode}}" class="search-group">
           <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
         </view>
-        <view wx:if="{{!expand && !routes}}" class="btn-wrapper">
-          <button class="btn" bindtap="expand">开启旅程</button>
+        <view wx:if="{{!expand}}" class="btn-wrapper">
+          <button class="btn" bindtap="expand">{{welcome ? '开启旅程' : '修改行程'}}</button>
         </view>
         <view wx:if="{{expand && editMode}}" class="btn-wrapper">
-          <button disabled="{{submitDisabled}}" class="btn" bindtap="search">开始制定路线</button>
+          <button loading="{{loading}}" disabled="{{submitDisabled}}" class="btn" bindtap="search">
+            开始制定路线
+          </button>
         </view>
       </view>
     </view>

@@ -42,13 +42,22 @@ Page({
   },
   search: function() {
     if (!this.data.submitDisabled) {
-      const { markers, routes } = this.data;
+      const { markers } = this.data;
+      const routes = {};
       const polyline = [];
       const promise = [];
       const that = this;
       this.setData({ loading: true });
       for (let i = 0; i < markers.length - 1; i++) {
         for (let j = i + 1; j < markers.length; j++) {
+          const i2j = `${markers[i].id},${markers[j].id}`;
+          const j2i = `${markers[j].id},${markers[i].id}`;
+          // check if already exist
+          if (this.data.routes[i2j]) {
+            routes[i2j] = routes[j2i] = this.data.routes[i2j];
+            polyline.push(routes[i2j].steps);
+            continue;
+          }
           const origin = `${markers[i].longitude},${markers[i].latitude}`;
           const destination = `${markers[j].longitude},${markers[j].latitude}`;
           promise.push(
@@ -81,16 +90,14 @@ Page({
                   if (data.taxi_cost) {
                     route.cost = parseInt(data.taxi_cost);
                   }
-                  polyline.push({
+                  const steps = {
                     points,
                     color: '#00B2B2',
                     width: 6
-                  });
-                  routes[`${markers[i].id},${markers[j].id}`] = route;
-                  that.setData({
-                    polyline,
-                    routes
-                  });
+                  };
+                  polyline.push(steps);
+                  route.steps = steps;
+                  routes[i2j] = routes[j2i] = route;
                   resolve();
                 },
                 fail: function(info) {
@@ -99,29 +106,30 @@ Page({
               });
             })
           );
-          Promise.all(promise).then(() => {
-            const { polyline } = this.data;
-            const points = [];
-            let i = 0;
-            while (i < polyline.length) {
-              if (Array.isArray(polyline[i].points)) {
-                points.push(...polyline[i].points);
-              }
-              i++;
-            }
-            this.mapCtx.includePoints({
-              points,
-              padding: [40, 40, 40, 40]
-            });
-            this.setData({
-              loading: false,
-              expand: false,
-              editMode: false,
-              welcome: false
-            });
-          });
         }
       }
+      Promise.all(promise).then(() => {
+        const points = [];
+        let i = 0;
+        while (i < polyline.length) {
+          if (Array.isArray(polyline[i].points)) {
+            points.push(...polyline[i].points);
+          }
+          i++;
+        }
+        this.mapCtx.includePoints({
+          points,
+          padding: [40, 40, 40, 40]
+        });
+        this.setData({
+          polyline,
+          routes,
+          loading: false,
+          expand: false,
+          editMode: false,
+          welcome: false
+        });
+      });
     }
   },
   checkDone: function() {

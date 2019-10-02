@@ -144,7 +144,6 @@ Page({
         .then(() => {
           const points = [];
           let i = 0;
-          console.log(polyline);
           while (i < polyline.length) {
             if (Array.isArray(polyline[i].points)) {
               points.push(...polyline[i].points);
@@ -175,7 +174,24 @@ Page({
   },
   getPlan: function() {
     const { routes, markers } = this.data;
-    console.log(routes, markers);
+    const points = markers.map(el => ({
+      id: el.id,
+      duration: el.duration
+    }));
+    console.log(routes, points);
+    wx.cloud.callFunction({
+      // 云函数名称
+      name: 'plan',
+      // 传给云函数的参数
+      data: {
+        points,
+        paths: routes
+      },
+      success: function(res) {
+        console.log(res.result);
+      },
+      fail: console.error
+    });
   },
   checkDone: function() {
     const { markers } = this.data;

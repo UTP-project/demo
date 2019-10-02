@@ -52,6 +52,15 @@
 }
 
 .btn {
-  color: #fff;
-  background-color: #00B2B2;
+  color: rgb(255, 255, 255);
+  background-color: rgb(0, 178, 178);
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn[disabled] {
+  color: rgb(255, 255, 255) !important;
+  background-color: rgba(0, 178, 178, 0.4) !important;
 }

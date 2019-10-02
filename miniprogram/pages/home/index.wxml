@@ -10,8 +10,11 @@
         <view wx:if="{{expand && editMode}}" class="search-group">
           <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
         </view>
-        <view class="btn-wrapper">
-          <button class="btn" bindtap="expand">开始制定路线</button>
+        <view wx:if="{{!expand && !routes}}" class="btn-wrapper">
+          <button class="btn" bindtap="expand">开启旅程</button>
+        </view>
+        <view wx:if="{{expand && editMode}}" class="btn-wrapper">
+          <button disabled="{{submitDisabled}}" class="btn" bindtap="search">开始制定路线</button>
         </view>
       </view>
     </view>

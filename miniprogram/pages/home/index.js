@@ -7,10 +7,10 @@ Page({
   data: {
     expand: false,
     editMode: false,
+    submitDisabled: true,
     routes: null,
     markers: [
       {
-        placeholder: '起始位置',
         text: '',
         disabled: true
       },
@@ -29,6 +29,27 @@ Page({
   expand: function() {
     this.setData({ expand: true, editMode: true });
   },
+  search: function() {
+    if (!this.data.submitDisabled) {
+      const { markers } = this.data;
+      for (let i = 0; i < markers.length - 1; i++) {
+        for (let j = i + 1; j < markers.length; j++) {
+          console.log(markers[i], markers[j]);
+        }
+      }
+    }
+  },
+  checkDone: function() {
+    const { markers } = this.data;
+    const idx = markers.findIndex(el => {
+      return !el.text && !el.longitude && !el.latitude;
+    });
+    if (idx === -1) {
+      this.setData({ submitDisabled: false });
+    } else {
+      this.setData({ submitDisabled: true });
+    }
+  },
   toSearch: function(idx) {
     const that = this;
     const { markers, latitude, longitude } = this.data;
@@ -37,7 +58,7 @@ Page({
       events: {
         confirm: function(data) {
           markers[idx] = { ...markers[idx], ...data };
-          that.setData({ markers });
+          that.setData({ markers }, () => that.checkDone());
         }
       },
       success: function(res) {
@@ -52,14 +73,17 @@ Page({
   bindAdd: function(e) {
     const { markers } = this.data;
     markers.push({ text: '', disabled: true });
-    this.setData({ markers });
+    this.setData({ markers }, () => {
+      this.checkDone();
+    });
   },
   bindDelete: function(e) {
     const { idx } = e.detail;
     const { markers } = this.data;
     markers.splice(idx, 1);
-    const data = { markers };
-    this.setData(data);
+    this.setData({ markers }, () => {
+      this.checkDone();
+    });
   },
   bindInputTap: function(e) {
     const { idx } = e.detail;

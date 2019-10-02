@@ -30,24 +30,14 @@ Page({
         }
       } else {
         const location = item.location.split(',');
-        this.setData(
-          {
-            tips: [],
-            keywords: item.name,
-            longitude: parseFloat(location[0]),
-            latitude: parseFloat(location[1])
-          },
-          () => {
-            const eventChannel = this.getOpenerEventChannel();
-            const { longitude, latitude, keywords } = this.data;
-            eventChannel.emit('confirm', {
-              text: keywords,
-              longitude,
-              latitude
-            });
-            wx.navigateBack();
-          }
-        );
+        const eventChannel = this.getOpenerEventChannel();
+        eventChannel.emit('confirm', {
+          id: item.id,
+          text: item.name,
+          longitude: parseFloat(location[0]),
+          latitude: parseFloat(location[1])
+        });
+        wx.navigateBack();
       }
     }
   },

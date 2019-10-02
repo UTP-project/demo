@@ -17,6 +17,7 @@ Page({
     submitDisabled: true,
     routes: {},
     polyline: [],
+    polylineMap: {},
     markers: [
       {
         text: '',
@@ -47,6 +48,7 @@ Page({
       const { markers } = this.data;
       const routes = {};
       const polyline = [];
+      const polylineMap = {};
       const promise = [];
       const that = this;
       this.setData({ loading: true });
@@ -57,7 +59,8 @@ Page({
           // check if already exist
           if (this.data.routes[i2j]) {
             routes[i2j] = routes[j2i] = this.data.routes[i2j];
-            polyline.push(routes[i2j].steps);
+            polylineMap[i2j] = polylineMap[j2i] = this.data.polylineMap[i2j];
+            polyline.push(polylineMap[i2j]);
             continue;
           }
           const origin = `${markers[i].longitude},${markers[i].latitude}`;
@@ -98,7 +101,7 @@ Page({
                     width: 6
                   };
                   polyline.push(steps);
-                  route.steps = steps;
+                  polylineMap[i2j] = polylineMap[j2i] = steps;
                   routes[i2j] = routes[j2i] = route;
                   resolve();
                 },
@@ -110,7 +113,7 @@ Page({
           );
         }
       }
-      Promise.all(promise).then(() => {
+      if (promise.length === 0) {
         const points = [];
         let i = 0;
         while (i < polyline.length) {
@@ -123,16 +126,56 @@ Page({
           points,
           padding: [40, 40, 40, 40]
         });
-        this.setData({
-          polyline,
-          routes,
-          loading: false,
-          expand: false,
-          editMode: false,
-          welcome: false
+        this.setData(
+          {
+            polyline,
+            polylineMap,
+            routes,
+            loading: false,
+            expand: false,
+            editMode: false,
+            welcome: false
+          },
+          () => this.getPlan()
+        );
+        return;
+      }
+      Promise.all(promise)
+        .then(() => {
+          const points = [];
+          let i = 0;
+          console.log(polyline);
+          while (i < polyline.length) {
+            if (Array.isArray(polyline[i].points)) {
+              points.push(...polyline[i].points);
+            }
+            i++;
+          }
+          this.mapCtx.includePoints({
+            points,
+            padding: [40, 40, 40, 40]
+          });
+          this.setData(
+            {
+              polyline,
+              polylineMap,
+              routes,
+              loading: false,
+              expand: false,
+              editMode: false,
+              welcome: false
+            },
+            () => this.getPlan()
+          );
+        })
+        .catch(err => {
+          console.error(err);
         });
-      });
     }
+  },
+  getPlan: function() {
+    const { routes, markers } = this.data;
+    console.log(routes, markers);
   },
   checkDone: function() {
     const { markers } = this.data;
@@ -168,7 +211,7 @@ Page({
   },
   bindAdd: function(e) {
     const { markers } = this.data;
-    markers.push({ text: '', disabled: true });
+    markers.push({ text: '', name: '', disabled: true });
     this.setData({ markers }, () => {
       this.checkDone();
     });

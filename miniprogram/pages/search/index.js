@@ -24,9 +24,11 @@ Page({
   },
   bindInput: function(e) {
     const { value } = e.detail;
-    this.setData({ keywords: value }, () => {
-      this.fetchTips();
-    });
+    if (value) {
+      this.setData({ keywords: value }, () => {
+        this.fetchTips();
+      });
+    }
   },
   bindSearch: function(e) {
     const { item } = e.target.dataset;

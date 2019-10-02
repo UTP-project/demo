@@ -1,8 +1,22 @@
 <!-- miniprogram/pages/search/index.wxml -->
 <view class="container">
   <view class="markers-card">
-    <view class="search-wrapper">
-      <input class="search-input" placeholder="搜索" value="{{keywords}}" focus="{{true}}" bindinput="bindInput" />
+    <view class="form">
+      <view class="search-wrapper">
+        <input class="search-input" placeholder="搜索" value="{{keywords}}" focus="{{true}}" bindinput="bindInput" />
+      </view>
+      <view wx:if="{{showDuration}}" class="duration-wrapper">
+        <picker class="duration-picker" range="{{time}}" bindchange="durationChange">
+          <input class="search-input" disabled="{{true}}" placeholder="游玩时间(h)" value="{{marker.duration}}" />
+        </picker>
+      </view>
+    </view>
+    <view class="extra" wx:if="{{showDuration}}">
+      <view class="confirm-wrapper">
+        <button class="btn" size="mini" disabled="{{confirmDisabled}}" bind:tap="onConfirm">
+          确认
+        </button>
+      </view>
     </view>
   </view>
   <view class="tips-card" bind:tap="bindSearch">

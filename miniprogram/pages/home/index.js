@@ -20,10 +20,12 @@ Page({
     markers: [
       {
         text: '',
+        name: '',
         disabled: true
       },
       {
         text: '',
+        name: '',
         disabled: true
       }
     ],
@@ -135,7 +137,7 @@ Page({
   checkDone: function() {
     const { markers } = this.data;
     const idx = markers.findIndex(el => {
-      return !el.text && !el.longitude && !el.latitude;
+      return !el.name && !el.duration && !el.longitude && !el.latitude;
     });
     if (idx === -1) {
       this.setData({ submitDisabled: false });
@@ -151,12 +153,13 @@ Page({
       events: {
         confirm: function(data) {
           markers[idx] = { ...markers[idx], ...data };
+          markers[idx].text = `${data.name} - ${data.duration} h`;
           that.setData({ markers }, () => that.checkDone());
         }
       },
       success: function(res) {
         res.eventChannel.emit('onload', {
-          keywords: markers[idx].text,
+          keywords: markers[idx].name,
           latitude,
           longitude
         });

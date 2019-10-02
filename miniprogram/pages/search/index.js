@@ -7,12 +7,21 @@ Page({
    * Page initial data
    */
   data: {
+    marker: {},
     keywords: '',
     latitude: '',
     longitude: '',
-    tips: []
+    tips: [],
+    time: [],
+    showDuration: false,
+    confirmDisabled: true
   },
 
+  durationChange: function(e) {
+    const { marker } = this.data;
+    marker.duration = this.data.time[+e.detail.value];
+    this.setData({ marker }, () => this.checkDone());
+  },
   bindInput: function(e) {
     const { value } = e.detail;
     this.setData({ keywords: value }, () => {
@@ -30,18 +39,38 @@ Page({
         }
       } else {
         const location = item.location.split(',');
-        const eventChannel = this.getOpenerEventChannel();
-        eventChannel.emit('confirm', {
-          id: item.id,
-          text: item.name,
-          longitude: parseFloat(location[0]),
-          latitude: parseFloat(location[1])
-        });
-        wx.navigateBack();
+        const { marker } = this.data;
+        marker.id = item.id;
+        marker.name = item.name;
+        marker.longitude = parseFloat(location[0]);
+        marker.latitude = parseFloat(location[1]);
+        this.setData(
+          {
+            keywords: item.name,
+            tips: [],
+            marker,
+            showDuration: true
+          },
+          () => this.checkDone()
+        );
       }
     }
   },
-  fetchTips() {
+  checkDone: function() {
+    if (this.data.marker && this.data.marker.id && this.data.marker.duration) {
+      this.setData({ confirmDisabled: false });
+    } else {
+      this.setData({ confirmDisabled: true });
+    }
+  },
+  onConfirm: function() {
+    const eventChannel = this.getOpenerEventChannel();
+    if (this.data.marker && this.data.marker.id && this.data.marker.duration) {
+      eventChannel.emit('confirm', { ...this.data.marker });
+      wx.navigateBack();
+    }
+  },
+  fetchTips: function() {
     const { keywords, longitude, latitude } = this.data;
     if (keywords) {
       const that = this;
@@ -50,7 +79,6 @@ Page({
         location: `${longitude},${latitude}`,
         success: function(data) {
           if (data && data.tips) {
-            console.log(data.tips);
             that.setData({
               tips: data.tips
             });
@@ -68,6 +96,11 @@ Page({
     eventChannel.on('onload', data => {
       this.setData({ ...data }, () => this.fetchTips());
     });
+    const time = [];
+    for (let i = 1; i <= 12; i += 0.5) {
+      time.push(i);
+    }
+    this.setData({ time });
   },
 
   /**

@@ -1,9 +1,15 @@
 /* miniprogram/pages/home/index.wxss */
 
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
 .map-container {
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: 340px;
   left: 0;
   right: 0;
 }
@@ -13,14 +19,11 @@
   height: 100%;
 }
 
-.cover-view {
+.cover-container {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-}
-
-.cover-container {
   background: #fff;
   border-radius: 16px 16px 0 0;
   display: flex;

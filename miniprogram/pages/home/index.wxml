@@ -1,23 +1,32 @@
 <!-- miniprogram/pages/home/index.wxml -->
-<view class="map-container">
-  <map id="home-map" class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline}}" />
-  <view class="cover-view">
-    <view class="cover-container" style="height: {{expand ? 'calc(100vh - 60px)' : '180px'}}">
-      <view wx:if="{{expand}}" class="collapse-wrapper" bind:tap="collapse">
-        <text>collapse</text>
+<view>
+  <view class="map-container">
+    <map id="home-map" class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline}}" />
+  </view>
+  <view class="cover-container" style="height: {{expand ? 'calc(100vh - 60px)' : '360px'}}">
+    <view wx:if="{{expand}}" class="collapse-wrapper" bind:tap="collapse">
+      <text>collapse</text>
+    </view>
+    <view class="content-wrapper">
+      <view wx:if="{{expand && editMode}}" class="search-group">
+        <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
       </view>
-      <view class="content-wrapper">
-        <view wx:if="{{expand && editMode}}" class="search-group">
-          <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
+      <view wx:if="{{!editMode && plan && plan[0] && plan[0].route}}" class="plan-wrapper">
+        <view class="day-wrapper" wx:for="{{plan[0].route}}" wx:for-index="dayIdx" wx:for-item="day">
+          第{{dayIdx + 1}}天
+          <view class="attraction-wrapper" wx:for="{{day}}" wx:for-index="attractionIdx" wx:for-item="attraction">
+            {{attraction.id}} {{attraction.duration}}
+          </view>
         </view>
-        <view wx:if="{{!expand}}" class="btn-wrapper">
-          <button class="btn" bindtap="expand">{{welcome ? '开启旅程' : '修改行程'}}</button>
-        </view>
-        <view wx:if="{{expand && editMode}}" class="btn-wrapper">
-          <button loading="{{loading}}" disabled="{{submitDisabled}}" class="btn" bindtap="search">
-            开始制定路线
-          </button>
-        </view>
+        <view class="plan-info">{{plan[0].duration}} {{plan[0].distance}} {{plan[0].cost}}</view>
+      </view>
+      <view wx:if="{{!expand}}" class="btn-wrapper">
+        <button class="btn" bindtap="expand">{{welcome ? '开启旅程' : '修改行程'}}</button>
+      </view>
+      <view wx:if="{{expand && editMode}}" class="btn-wrapper">
+        <button loading="{{loading}}" disabled="{{submitDisabled}}" class="btn" bindtap="search">
+          开始制定路线
+        </button>
       </view>
     </view>
   </view>

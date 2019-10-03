@@ -31,14 +31,15 @@ Page({
       }
     ],
     latitude: '',
-    longitude: ''
+    longitude: '',
+    plan: {}
   },
 
   includePoints: function() {
     return this.data.markers.filter(el => el.longitude && el.latitude);
   },
   collapse: function() {
-    this.setData({ expand: false });
+    this.setData({ expand: false, editMode: false });
   },
   expand: function() {
     this.setData({ expand: true, editMode: true });
@@ -173,22 +174,24 @@ Page({
     }
   },
   getPlan: function() {
+    const that = this;
     const { routes, markers } = this.data;
+    console.log(routes, markers);
     const points = markers.map(el => ({
       id: el.id,
       duration: el.duration
     }));
-    console.log(routes, points);
     wx.cloud.callFunction({
-      // 云函数名称
       name: 'plan',
-      // 传给云函数的参数
       data: {
         points,
         paths: routes
       },
       success: function(res) {
-        console.log(res.result);
+        const { plan } = res.result;
+        if (plan) {
+          that.setData({ plan });
+        }
       },
       fail: console.error
     });

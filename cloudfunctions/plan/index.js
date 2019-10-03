@@ -67,7 +67,7 @@ function recursicve(
   paths,
   points,
   idx = 0,
-  routes,
+  plan,
   route = [[]],
   time = startTime,
   distance = 0,
@@ -82,32 +82,34 @@ function recursicve(
       cost,
       duration
     };
-    if (!routes.minDistance || !routes.minCost || !routes.minDuration) {
-      routes.minDistance = routes.minCost = routes.minDuration = nroute;
+    if (plan.length === 0) {
+      plan.push({ ...nroute, desc: '最短时间' });
+      plan.push({ ...nroute, desc: '最短距离' });
+      plan.push({ ...nroute, desc: '最少消费' });
     } else {
-      // distance
-      let tmp = [routes.minDistance, nroute];
-      tmp.sort(sortDistance);
-      routes.minDistance = tmp[0];
-
       // duration
-      tmp = [routes.minDuration, nroute];
+      let tmp = [plan[0], nroute];
       tmp.sort(sortDuration);
-      routes.minDuration = tmp[0];
+      plan[0] = { ...tmp[0], desc: '最短时间' };
+
+      // distance
+      tmp = [plan[1], nroute];
+      tmp.sort(sortDistance);
+      plan[1] = { ...tmp[0], desc: '最短距离' };
 
       // cost
-      tmp = [routes.minCost, nroute];
+      tmp = [plan[2], nroute];
       tmp.sort(sortCost);
-      routes.minCost = tmp[0];
+      plan[2] = { ...tmp[0], desc: '最少消费' };
     }
     return;
   }
   // pruning
   const notOptimal =
-    routes.minDistance &&
-    distance > routes.minDistance.distance &&
-    (routes.minDuration && duration > routes.minDuration.duration) &&
-    (routes.minCost && cost > routes.minCost.cost);
+    plan.length > 2 &&
+    duration > plan[0].duration &&
+    distance > plan[1].distance &&
+    cost > plan[2].cost;
   if (notOptimal) {
     return;
   }
@@ -134,7 +136,7 @@ function recursicve(
           paths,
           points,
           idx + 1,
-          routes,
+          plan,
           route,
           ntime,
           ndistance,
@@ -153,9 +155,9 @@ function recursicve(
           paths,
           points,
           idx + 1,
-          routes,
+          plan,
           route,
-          startTime,
+          startTime + points[i].duration,
           distance,
           cost,
           duration

@@ -15,10 +15,10 @@
         <view class="day-wrapper" style="{{dayIdx + 1 === curDay ? 'background: #ccc' : 'background: #f6f6f6'}}" data-day="{{dayIdx + 1}}" wx:for="{{plan[0].route}}" wx:for-index="dayIdx" wx:for-item="day" bind:tap="changeDay">
           <view class="day-title">第{{dayIdx + 1}}天</view>
           <view class="attraction-wrapper" wx:for="{{day}}" wx:for-index="attractionIdx" wx:for-item="attraction">
-            {{attraction.id}} {{attraction.duration}}
+            {{markers[markersMap[attraction.id]].name}} - {{attraction.duration}}h
           </view>
         </view>
-        <view class="plan-info">{{plan[0].duration}} {{plan[0].distance}} {{plan[0].cost}}</view>
+        <!-- <view class="plan-info">{{plan[0].duration}} {{plan[0].distance}} {{plan[0].cost}}</view> -->
       </view>
       <view wx:if="{{!expand}}" class="btn-wrapper">
         <button class="btn" bindtap="expand">{{welcome ? '开启旅程' : '修改行程'}}</button>

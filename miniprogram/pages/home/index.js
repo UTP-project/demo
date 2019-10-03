@@ -31,18 +31,24 @@ Page({
         disabled: true
       }
     ],
+    markersMap: {},
     latitude: '',
     longitude: '',
     plan: {}
   },
 
   includePoints: function() {
-    const { polyline, curDay } = this.data;
+    const { polyline } = this.data;
     const points = [];
     let i = 0;
-    while (i < polyline[curDay].length) {
-      if (Array.isArray(polyline[curDay][i].points)) {
-        points.push(...polyline[curDay][i].points);
+    const keys = Object.keys(polyline);
+    while (i < keys.length) {
+      let j = 0;
+      while (j < polyline[keys[i]].length) {
+        if (Array.isArray(polyline[keys[i]][j].points)) {
+          points.push(...polyline[keys[i]][j].points);
+        }
+        j++;
       }
       i++;
     }
@@ -60,7 +66,7 @@ Page({
   changeDay: function(e) {
     const { day } = e.target.dataset;
     if (day) {
-      this.setData({ curDay: day }, () => this.includePoints());
+      this.setData({ curDay: day });
     }
   },
   search: function() {
@@ -157,7 +163,7 @@ Page({
   },
   getPlan: function() {
     const that = this;
-    const { routes, markers, polylineMap } = this.data;
+    const { routes, markers, markersMap, polylineMap } = this.data;
     const points = markers.map(el => ({
       id: el.id,
       duration: el.duration
@@ -173,12 +179,21 @@ Page({
         const { plan } = res.result;
         if (plan) {
           if (plan[0] && plan[0].route) {
-            console.log(plan[0].route);
             let i = 0;
             while (i < plan[0].route.length) {
               let j = 0;
               const curDay = i + 1;
               const attractions = plan[0].route[i];
+              if (attractions.length - 1 === 0) {
+                const points = [markers[markersMap[attractions[j].id]]];
+                polyline[curDay] = [
+                  {
+                    points,
+                    color: '#00B2B2',
+                    width: 6
+                  }
+                ];
+              }
               while (j < attractions.length - 1) {
                 if (!polyline[curDay]) {
                   polyline[curDay] = [];
@@ -190,7 +205,6 @@ Page({
               }
               i++;
             }
-            console.log(polyline);
           }
           that.setData(
             {
@@ -230,14 +244,15 @@ Page({
   },
   toSearch: function(idx) {
     const that = this;
-    const { markers, latitude, longitude } = this.data;
+    const { markers, markersMap, latitude, longitude } = this.data;
     wx.navigateTo({
       url: '/pages/search/index',
       events: {
         confirm: function(data) {
           markers[idx] = { ...markers[idx], ...data };
           markers[idx].text = `${data.name} - ${data.duration} h`;
-          that.setData({ markers }, () => that.checkDone());
+          markersMap[data.id] = idx;
+          that.setData({ markers, markersMap }, () => that.checkDone());
         }
       },
       success: function(res) {
@@ -258,9 +273,10 @@ Page({
   },
   bindDelete: function(e) {
     const { idx } = e.detail;
-    const { markers } = this.data;
+    const { markers, markersMap } = this.data;
+    delete markersMap[markers[idx].id];
     markers.splice(idx, 1);
-    this.setData({ markers }, () => {
+    this.setData({ markers, markersMap }, () => {
       this.checkDone();
     });
   },

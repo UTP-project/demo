@@ -57,6 +57,12 @@ Page({
   expand: function() {
     this.setData({ expand: true, editMode: true });
   },
+  changeDay: function(e) {
+    const { day } = e.target.dataset;
+    if (day) {
+      this.setData({ curDay: day }, () => this.includePoints());
+    }
+  },
   search: function() {
     if (!this.data.submitDisabled) {
       const { markers } = this.data;
@@ -166,8 +172,8 @@ Page({
       success: function(res) {
         const { plan } = res.result;
         if (plan) {
-          console.log(plan);
           if (plan[0] && plan[0].route) {
+            console.log(plan[0].route);
             let i = 0;
             while (i < plan[0].route.length) {
               let j = 0;
@@ -184,6 +190,7 @@ Page({
               }
               i++;
             }
+            console.log(polyline);
           }
           that.setData(
             {

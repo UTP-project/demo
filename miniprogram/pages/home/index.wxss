@@ -67,3 +67,19 @@
   color: rgb(255, 255, 255) !important;
   background-color: rgba(0, 178, 178, 0.4) !important;
 }
+
+.day-wrapper {
+  padding: 10px 24px;
+  margin-top: 12px;
+  border-radius: 8px;
+}
+
+.day-title {
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.attraction-wrapper {
+  margin-top: 8px;
+  pointer-events: none;
+}

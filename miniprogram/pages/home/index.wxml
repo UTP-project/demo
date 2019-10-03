@@ -12,8 +12,8 @@
         <search-group markers="{{markers}}" bind:add="bindAdd" bind:delete="bindDelete" bind:tapInput="bindInputTap" bind:input="bindInput" />
       </view>
       <view wx:if="{{!editMode && plan && plan[0] && plan[0].route}}" class="plan-wrapper">
-        <view class="day-wrapper" wx:for="{{plan[0].route}}" wx:for-index="dayIdx" wx:for-item="day">
-          第{{dayIdx + 1}}天
+        <view class="day-wrapper" style="{{dayIdx + 1 === curDay ? 'background: #ccc' : 'background: #f6f6f6'}}" data-day="{{dayIdx + 1}}" wx:for="{{plan[0].route}}" wx:for-index="dayIdx" wx:for-item="day" bind:tap="changeDay">
+          <view class="day-title">第{{dayIdx + 1}}天</view>
           <view class="attraction-wrapper" wx:for="{{day}}" wx:for-index="attractionIdx" wx:for-item="attraction">
             {{attraction.id}} {{attraction.duration}}
           </view>

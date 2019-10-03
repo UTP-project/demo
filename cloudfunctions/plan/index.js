@@ -32,51 +32,37 @@ function deepClone(target, map = new WeakMap()) {
   }
 }
 
-function distance2duration(distance) {
-  return distance;
-}
-
-function duration2cost(duration) {
-  return duration;
-}
-
-function cost2distance(cost) {
-  return cost;
-}
-
 function sortDistance(r1, r2) {
   if (r1.distance < r2.distance) return -1;
   if (r1.distance > r2.distance) return 1;
 
-  return (
-    duration2cost(r1.duration) +
-    r1.cost -
-    (duration2cost(r2.duration) + r2.cost)
-  );
+  if (r1.duration < r2.duration) return -1;
+  if (r1.duration > r2.duration) return 1;
+
+  return r1.cost - r2.cost;
 }
 
 function sortDuration(r1, r2) {
   if (r1.duration < r2.duration) return -1;
   if (r1.duration > r2.duration) return 1;
 
-  return (
-    cost2distance(r1.cost) +
-    r1.distance -
-    (cost2distance(r2.cost) + r2.distance)
-  );
+  if (r1.cost < r2.cost) return -1;
+  if (r1.cost > r2.cost) return 1;
+
+  return r1.distance - r2.distance;
 }
 
 function sortCost(r1, r2) {
   if (r1.cost < r2.cost) return -1;
   if (r1.cost > r2.cost) return 1;
 
-  return (
-    distance2duration(r1.distance) +
-    r1.duration -
-    (distance2duration(r2.distance) + r2.disdurationtance)
-  );
+  if (r1.distance < r2.distance) return -1;
+  if (r1.distance > r2.distance) return 1;
+
+  return r1.duration - r2.duration;
 }
 
+// main
 function recursicve(
   paths,
   points,
@@ -88,8 +74,8 @@ function recursicve(
   cost = 0,
   duration = 0
 ) {
+  // all points add in route, end of this route
   if (idx === points.length) {
-    // all points add in route
     const nroute = {
       route: deepClone(route),
       distance,
@@ -116,6 +102,7 @@ function recursicve(
     }
     return;
   }
+  // pruning
   const notOptimal =
     routes.minDistance &&
     distance > routes.minDistance.distance &&
@@ -124,6 +111,7 @@ function recursicve(
   if (notOptimal) {
     return;
   }
+  // traverse, n!
   for (let i = 0; i < points.length; i++) {
     if (!record[i]) {
       const curDay = route[route.length - 1];
@@ -136,7 +124,7 @@ function recursicve(
             cost: 0
           };
       const ntime = time + path.duration / (60 * 60) + points[i].duration;
-      const nDuration = duration + path.duration / 60;
+      const nduration = duration + path.duration / 60;
       const ndistance = distance + path.distance;
       const ncost = cost + path.cost;
       if (ntime < endTime) {
@@ -151,7 +139,7 @@ function recursicve(
           ntime,
           ndistance,
           ncost,
-          nDuration
+          nduration
         );
         curDay.pop();
         record[i] = false;
@@ -168,9 +156,9 @@ function recursicve(
           routes,
           route,
           startTime,
-          ndistance,
-          ncost,
-          nDuration
+          distance,
+          cost,
+          duration
         );
         route.pop();
         record[i] = false;

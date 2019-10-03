@@ -87,31 +87,59 @@ function recursicve(
       plan.push({ ...nroute, desc: '最短距离' });
       plan.push({ ...nroute, desc: '最少消费' });
     } else {
+      const days = nroute.route.length;
+      if (
+        days > plan[0].route.length &&
+        days > plan[1].route.length &&
+        days > plan[2].route.length
+      ) {
+        return;
+      }
       // duration
-      let tmp = [plan[0], nroute];
-      tmp.sort(sortDuration);
-      plan[0] = { ...tmp[0], desc: '最短时间' };
+      if (days < plan[0].route.length) {
+        // minimum day is prioritized
+        plan[0] = { ...nroute, desc: '最短时间' };
+      } else {
+        const tmp = [plan[0], nroute];
+        tmp.sort(sortDuration);
+        plan[0] = { ...tmp[0], desc: '最短时间' };
+      }
 
       // distance
-      tmp = [plan[1], nroute];
-      tmp.sort(sortDistance);
-      plan[1] = { ...tmp[0], desc: '最短距离' };
+      if (days < plan[1].route.length) {
+        // minimum day is prioritized
+        plan[1] = { ...nroute, desc: '最短距离' };
+      } else {
+        const tmp = [plan[1], nroute];
+        tmp.sort(sortDistance);
+        plan[1] = { ...tmp[0], desc: '最短距离' };
+      }
 
       // cost
-      tmp = [plan[2], nroute];
-      tmp.sort(sortCost);
-      plan[2] = { ...tmp[0], desc: '最少消费' };
+      if (days < plan[2].route.length) {
+        // minimum day is prioritized
+        plan[2] = { ...nroute, desc: '最少消费' };
+      } else {
+        const tmp = [plan[2], nroute];
+        tmp.sort(sortCost);
+        plan[2] = { ...tmp[0], desc: '最少消费' };
+      }
     }
     return;
   }
   // pruning
-  const notOptimal =
-    plan.length > 2 &&
-    duration > plan[0].duration &&
-    distance > plan[1].distance &&
-    cost > plan[2].cost;
-  if (notOptimal) {
-    return;
+  const days = route.length;
+  if (plan.length > 2) {
+    const notOptimal =
+      (duration > plan[0].duration &&
+        distance > plan[1].distance &&
+        cost > plan[2].cost) ||
+      (days > plan[0].route.length &&
+        days > plan[1].route.length &&
+        days > plan[2].route.length);
+    if (notOptimal) {
+      return;
+    }
   }
   // traverse, n!
   for (let i = 0; i < points.length; i++) {
@@ -173,7 +201,7 @@ function recursicve(
 exports.main = async (event, context) => {
   const { points, paths } = event;
 
-  const plan = {};
+  const plan = [];
   recursicve(paths, points, 0, plan);
 
   return {

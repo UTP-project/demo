@@ -16,7 +16,8 @@ Page({
     editMode: false,
     submitDisabled: true,
     routes: {},
-    polyline: [],
+    polyline: {},
+    curDay: 1,
     polylineMap: {},
     markers: [
       {
@@ -36,7 +37,19 @@ Page({
   },
 
   includePoints: function() {
-    return this.data.markers.filter(el => el.longitude && el.latitude);
+    const { polyline, curDay } = this.data;
+    const points = [];
+    let i = 0;
+    while (i < polyline[curDay].length) {
+      if (Array.isArray(polyline[curDay][i].points)) {
+        points.push(...polyline[curDay][i].points);
+      }
+      i++;
+    }
+    this.mapCtx.includePoints({
+      points,
+      padding: [40, 40, 40, 40]
+    });
   },
   collapse: function() {
     this.setData({ expand: false, editMode: false });
@@ -48,7 +61,6 @@ Page({
     if (!this.data.submitDisabled) {
       const { markers } = this.data;
       const routes = {};
-      const polyline = [];
       const polylineMap = {};
       const promise = [];
       const that = this;
@@ -61,7 +73,6 @@ Page({
           if (this.data.routes[i2j]) {
             routes[i2j] = routes[j2i] = this.data.routes[i2j];
             polylineMap[i2j] = polylineMap[j2i] = this.data.polylineMap[i2j];
-            polyline.push(polylineMap[i2j]);
             continue;
           }
           const origin = `${markers[i].longitude},${markers[i].latitude}`;
@@ -101,7 +112,6 @@ Page({
                     color: '#00B2B2',
                     width: 6
                   };
-                  polyline.push(steps);
                   polylineMap[i2j] = polylineMap[j2i] = steps;
                   routes[i2j] = routes[j2i] = route;
                   resolve();
@@ -115,27 +125,10 @@ Page({
         }
       }
       if (promise.length === 0) {
-        const points = [];
-        let i = 0;
-        while (i < polyline.length) {
-          if (Array.isArray(polyline[i].points)) {
-            points.push(...polyline[i].points);
-          }
-          i++;
-        }
-        this.mapCtx.includePoints({
-          points,
-          padding: [40, 40, 40, 40]
-        });
         this.setData(
           {
-            polyline,
             polylineMap,
-            routes,
-            loading: false,
-            expand: false,
-            editMode: false,
-            welcome: false
+            routes
           },
           () => this.getPlan()
         );
@@ -143,27 +136,10 @@ Page({
       }
       Promise.all(promise)
         .then(() => {
-          const points = [];
-          let i = 0;
-          while (i < polyline.length) {
-            if (Array.isArray(polyline[i].points)) {
-              points.push(...polyline[i].points);
-            }
-            i++;
-          }
-          this.mapCtx.includePoints({
-            points,
-            padding: [40, 40, 40, 40]
-          });
           this.setData(
             {
-              polyline,
               polylineMap,
-              routes,
-              loading: false,
-              expand: false,
-              editMode: false,
-              welcome: false
+              routes
             },
             () => this.getPlan()
           );
@@ -175,12 +151,12 @@ Page({
   },
   getPlan: function() {
     const that = this;
-    const { routes, markers } = this.data;
-    console.log(routes, markers);
+    const { routes, markers, polylineMap } = this.data;
     const points = markers.map(el => ({
       id: el.id,
       duration: el.duration
     }));
+    const polyline = {};
     wx.cloud.callFunction({
       name: 'plan',
       data: {
@@ -190,10 +166,48 @@ Page({
       success: function(res) {
         const { plan } = res.result;
         if (plan) {
-          that.setData({ plan });
+          console.log(plan);
+          if (plan[0] && plan[0].route) {
+            let i = 0;
+            while (i < plan[0].route.length) {
+              let j = 0;
+              const curDay = i + 1;
+              const attractions = plan[0].route[i];
+              while (j < attractions.length - 1) {
+                if (!polyline[curDay]) {
+                  polyline[curDay] = [];
+                }
+                polyline[curDay].push(
+                  polylineMap[`${attractions[j].id},${attractions[j + 1].id}`]
+                );
+                j++;
+              }
+              i++;
+            }
+          }
+          that.setData(
+            {
+              plan,
+              polyline,
+              curDay: 1,
+              loading: false,
+              expand: false,
+              editMode: false,
+              welcome: false
+            },
+            () => that.includePoints()
+          );
         }
       },
-      fail: console.error
+      fail: function(err) {
+        that.setData({
+          loading: false,
+          expand: false,
+          editMode: false,
+          welcome: false
+        });
+        console.error(err);
+      }
     });
   },
   checkDone: function() {

@@ -1,7 +1,7 @@
 <!-- miniprogram/pages/home/index.wxml -->
 <view>
   <view class="map-container">
-    <map id="home-map" class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline}}" />
+    <map id="home-map" class="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline[curDay]}}" />
   </view>
   <view class="cover-container" style="height: {{expand ? 'calc(100vh - 60px)' : '360px'}}">
     <view wx:if="{{expand}}" class="collapse-wrapper" bind:tap="collapse">

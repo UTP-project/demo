@@ -131,12 +131,9 @@ function recursicve(
   const days = route.length;
   if (plan.length > 2) {
     const notOptimal =
-      (duration > plan[0].duration &&
-        distance > plan[1].distance &&
-        cost > plan[2].cost) ||
-      (days > plan[0].route.length &&
-        days > plan[1].route.length &&
-        days > plan[2].route.length);
+      days > plan[0].route.length &&
+      days > plan[1].route.length &&
+      days > plan[2].route.length;
     if (notOptimal) {
       return;
     }
